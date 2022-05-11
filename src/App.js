@@ -1,23 +1,21 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
 import './App.css';
+import SWDisplay from './components/SWDisplay';
+import SWForm from './components/SWForm';
+import Error from './components/Error';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Star Wars Search Engine</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SWForm />}/>
+          <Route path="/:noun/:index" element={<div><SWForm /> <SWDisplay /></div>} />
+          <Route path="*" element={<div><SWForm /> <Error /></div>} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
