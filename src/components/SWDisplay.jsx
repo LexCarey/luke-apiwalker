@@ -6,7 +6,12 @@ import {useParams, useNavigate} from "react-router-dom"
 
 const SWDisplay = () => {
     const [starWarsInfo, setStarWarsInfo] = useState()
-    const [error, setError] = useState(false)
+    const [homeWorld, setHomeWorld] = useState()
+    const options = [{
+            people: ["height", "mass", "hair_color", "skin_color"],
+            planets: ["diameter", "climate", "terrain", "population"],
+            starships: ["model", "manufacturer", "crew", "passengers"]
+        }]
     const {noun, index} = useParams()
     const navigate = useNavigate()
 
@@ -19,6 +24,27 @@ const SWDisplay = () => {
         })
     }, [])
 
+    const getHomeWorld = (link) => {
+        if (noun=="people") {
+            axios.get(link)
+        .then(response => setHomeWorld(response.data))
+        .catch(err => {
+            console.log(err)
+            navigate("/error")
+        })
+        console.log(homeWorld)
+        if (homeWorld) {
+            return "Home World: " + homeWorld.name
+        } else {
+            return "Loading..."
+        }
+        }
+    }
+
+    const properString = (string) => {
+        return string.charAt(0).toUpperCase() + string.replace(/_/g, ' ').slice(1)
+    }
+
     return (
         <div>
             {
@@ -26,33 +52,11 @@ const SWDisplay = () => {
                     <div>
                         <h1>{starWarsInfo.name}</h1>
                         {
-                            noun=="people"&&
-                            <div>
-                                <h3>Height: {starWarsInfo.height} cm</h3>
-                                <h3>Mass: {starWarsInfo.mass} kg</h3>
-                                <h3>Hair Color: {starWarsInfo.hair_color}</h3>
-                                <h3>Skin Color: {starWarsInfo.skin_color}</h3>
-                            </div>
+                            options[0][noun].map((temp, i) => {
+                                return <h3 key={i}>{properString(temp)}: {starWarsInfo[temp]}</h3>
+                            })
                         }
-                        {
-                            noun=="planets"&&
-                            <div>
-                                <h3>Diameter: {starWarsInfo.diameter}</h3>
-                                <h3>Climate: {starWarsInfo.climate}</h3>
-                                <h3>Terrain: {starWarsInfo.terrain}</h3>
-                                <h3>Population: {starWarsInfo.population}</h3>
-                            </div>
-                        }
-                        {
-                            noun=="starships"&&
-                            <div>
-                                <h3>Model: {starWarsInfo.model}</h3>
-                                <h3>Manufacturer: {starWarsInfo.manufacturer}</h3>
-                                <h3>Crew Count: {starWarsInfo.crew}</h3>
-                                <h3>Passenger Count: {starWarsInfo.passengers}</h3>
-                            </div>
-                        }
-                        
+                        {<h3>{getHomeWorld(starWarsInfo.homeworld)}</h3>}
                     </div>
                     :
                     <h1>Loading...</h1>
@@ -62,3 +66,12 @@ const SWDisplay = () => {
 }
 
 export default SWDisplay
+
+
+//         {getHomeWorld(starWarsInfo.homeworld)}
+//         {
+//             homeWorld?
+//             <h3>Home World: {homeWorld.name}</h3>
+//             :
+//             <h3>Home World Loading</h3>
+//         }
