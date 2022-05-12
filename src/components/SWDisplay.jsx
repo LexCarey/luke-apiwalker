@@ -9,7 +9,7 @@ const SWDisplay = () => {
     const [homeWorld, setHomeWorld] = useState()
     const options = [{
             people: ["height", "mass", "hair_color", "skin_color"],
-            planets: ["diameter", "climate", "terrain", "population"],
+            planets: ["climate", "terrain", "surface_water", "population"],
             starships: ["model", "manufacturer", "crew", "passengers"]
         }]
     const {noun, index} = useParams()
@@ -36,7 +36,7 @@ const SWDisplay = () => {
         if (homeWorld) {
             return "Home World: " + homeWorld.name
         } else {
-            return "Loading..."
+            return "Loading Home World..."
         }
         }
     }
